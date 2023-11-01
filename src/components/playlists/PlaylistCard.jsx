@@ -9,7 +9,7 @@ const PlaylistCard = ({ playlist, index }) => {
         <li className="absolute text-black font-bold hover:rotate-6 hover:-translate-y-4 transition-transform"
             style={{ top: top }}>
 
-            <Link to={`/playlist/${playlist.id}`}>
+            <Link to={`/playlists/${playlist.id}`}>
                 <div >
                     <img src="/images/cassette.png" alt="" />
                 </div>

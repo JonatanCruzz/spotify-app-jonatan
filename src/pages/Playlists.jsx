@@ -1,14 +1,17 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { SearchIcon } from "../components/icons/Svgs"
 import PrincipalLayout from "../components/layouts/PrincipalLayout"
 import axiosMusic from "../utils/configAxios"
-import playlistList from "../components/playlists/playlistList"
+import PlaylistList from "../components/playlists/playlistList"
 
 const Playlists = () => {
 
   const [playlist, setPlaylist] = useState([])
 
   //TODO FILTAR POR PLAYLISTS DEL USUARIO
+  const handleSubmit = (e) => {
+    e.preventDefault()
+  }
 
   useEffect(() => {
 
@@ -36,7 +39,7 @@ const Playlists = () => {
         />
       </form>
 
-      <playlistList playlists={playlists} />
+      <PlaylistList playlists={playlist} />
     </PrincipalLayout>
   )
 }
