@@ -3,7 +3,15 @@ import { AddIcon, MinusIcon, PlayIcon } from "../icons/Svgs"
 import { addTrack, removeTrack } from "../../store/slices/playlistCart.slice"
 import { useDispatch } from "react-redux"
 
-const TrackCard = ({ track, showPlayBtn, showAddBtn, imageSize = "base", showMinusBtn }) => {
+const TrackCard = ({
+    track,
+    showPlayBtn,
+    showAddBtn,
+    imageSize = "base",
+    showMinusBtn,
+    deleteBtn,
+    playTrack
+}) => {
 
     const distpach = useDispatch();
 
@@ -71,6 +79,27 @@ const TrackCard = ({ track, showPlayBtn, showAddBtn, imageSize = "base", showMin
                     showMinusBtn && (
                         <button onClick={handleRemoveTrack}>
                             <MinusIcon />
+                        </button>
+                    )
+                }
+                {
+                    deleteBtn && (
+                        <button onClick={() => deleteBtn(track.id)}>
+                            <MinusIcon />
+                        </button>
+                    )
+                }
+                {
+                    playTrack && (
+                        <button onClick={() => playTrack(track.id)}>
+                            <PlayIcon />
+                        </button>
+                    )
+                }
+                {
+                    playTrack && (
+                        <button onClick={() => playTrack(track.spotifyId)}>
+                            <AddIcon />
                         </button>
                     )
                 }

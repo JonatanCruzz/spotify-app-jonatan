@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from "react"
 import { PencilIcon, SaveIcon, ShareIcon, TrashIcon } from "../components/icons/Svgs"
 import PrincipalLayout from "../components/layouts/PrincipalLayout"
 import axiosMusic from "../utils/configAxios"
-import { useParams } from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom"
+import TrackCard from "../components/shared/TrackCard"
 
 const PlaylistDetail = () => {
 
@@ -11,14 +12,15 @@ const PlaylistDetail = () => {
 
   const { id } = useParams();
   const formRef = useRef(null);
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault()
 
     const data = {
-      title: e.current.title.value,
-      to: e.current.to.value,
-      message: e.current.message.value,
+      title: e.target.title.value,
+      to: e.target.to.value,
+      message: e.target.message.value,
     };
 
     axiosMusic
@@ -29,14 +31,39 @@ const PlaylistDetail = () => {
       .catch((err) => console.log(err));
   };
 
+  const deleteTrack = (idTrack) => {
+
+    axiosMusic
+      .delete(`/api/playlists/${playlist.id}/tracks/${idTrack}`)
+      .then(() => {
+        const playlistCopy = structuredClone(playlist);
+        playlistCopy.tracks = playlistCopy.tracks.filter(
+          (track) => track.id !== idTrack
+        );
+        setPlaylist(playlistCopy);
+        alert("Track eliminado correctamente");
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const deletePlaylist = () => {
+    axiosMusic
+      .delete(`/api/playlists/${playlist.id}`)
+      .then(() => {
+        alert("Playlist eliminada correctamente");
+        navigate("/playlists");
+      })
+      .catch((err) => console.log(err));
+  };
+
   useEffect(() => {
     axiosMusic
       .get(`/api/playlists/${id}`)
       .then(({ data }) => {
         setPlaylist(data)
-        formRef.current.title.value = data.title
-        formRef.current.to.value = data.to
-        formRef.current.message.value = data.message
+        formRef.current.message.value = data.message;
+        formRef.current.title.value = data.title;
+        formRef.current.to.value = data.to;
       })
       .catch((err) => console.log(err))
   }, [])
@@ -44,7 +71,7 @@ const PlaylistDetail = () => {
   return (
     <PrincipalLayout>
       <form
-        onsSubmit={handleSubmit}
+        onSubmit={handleSubmit}
         ref={formRef}
         className="top-24 uppercase grid justify-center p-4 gap-1 rounded-md font-semibold transition-all">
 
@@ -73,16 +100,19 @@ const PlaylistDetail = () => {
             </button>
 
             <button
+              onClick={deletePlaylist}
               type="button"
               className="absolute bottom-4 left-[60px] border-2 rounded-full p-[3px]">
               <TrashIcon />
             </button>
 
-            <button
+            <Link
+              to={`/playlists/public/${playlist?.id}`}
+              target="_blank"
               type="button"
               className="absolute bottom-4 right-5 border-2 rounded-full p-[3px]">
               <ShareIcon />
-            </button>
+            </Link>
           </div>
 
           {/* Trasera */}
@@ -122,6 +152,12 @@ const PlaylistDetail = () => {
         </button>
 
       </form>
+
+      <section className="mt-6">
+        {
+          playlist?.tracks.map((track) => <TrackCard key={track.id} track={track} deleteBtn={deleteTrack} />)
+        }
+      </section>
     </PrincipalLayout>
   )
 }

@@ -3,6 +3,7 @@ import { PlayListIcon } from "../icons/Svgs"
 import PopUpAuth from "../shared/PopUpAuth"
 import PopUpPlayList from "../shared/PopUpPlayList"
 import { useSelector } from "react-redux"
+import { Link } from "react-router-dom"
 
 const PrincipalLayout = ({ children }) => {
     const [isShowAuth, setIsShowAuth] = useState(false)
@@ -30,7 +31,9 @@ const PrincipalLayout = ({ children }) => {
 
             <header className="bg-primary-dark flex justify-between p-4 px-4 uppercase 
       items-center">
-                <h1 className="font-semibold text-lg">Gift Music</h1>
+                <Link to="/">
+                    <h1 className="font-semibold text-lg">Gift Music</h1>
+                </Link>
 
                 <div className="flex gap-3">
                     <button onClick={() => setIsShowAuth(!isShowAuth)}
